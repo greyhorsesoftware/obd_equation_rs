@@ -12,6 +12,9 @@
 # this file overrides): E0463 "can't find crate for `std`" on aarch64-apple-ios.
 [toolchain]
 channel = "1.91.1"
+# rustfmt rides with the pinned toolchain (CI gates `cargo fmt --check`; the
+# workflow's `stable` install is overridden by this file, so it must be here).
+components = ["rustfmt"]
 targets = [
     "aarch64-apple-darwin",
     "aarch64-apple-ios",
