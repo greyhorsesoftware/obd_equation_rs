@@ -1,0 +1,33 @@
+[package]
+name = "obd_equation_rs"
+version = "1.0.0"
+edition = "2021"
+authors = ["Grey Horse Software <info@greyhorsesoftware.com>"]
+homepage = "https://greyhorsesoftware.com"
+repository = "https://github.com/greyhorsesoftware/obd_equation_rs"
+readme = "../README.md"
+description = "Native evaluator for the Torque OBD-II equation dialect — compile once, evaluate in tens of nanoseconds; C FFI included"
+keywords = ["obd", "obd-ii", "automotive", "torque", "equation"]
+categories = ["parser-implementations", "hardware-support"]
+license = "MIT OR Apache-2.0"
+
+[lib]
+name = "obd_equation_rs"
+crate-type = ["lib", "cdylib", "staticlib"]
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"
+# Transcendentals go through libm (pure-Rust) instead of the OS math library so
+# results are bit-identical across macOS/Linux/Windows — the corpus oracle can
+# then hold on every platform, and two users on different OSes see the same value.
+libm = "0.2"
+
+[dev-dependencies]
+criterion = "0.5"
+
+[[bench]]
+name = "eval_bench"
+harness = false
+

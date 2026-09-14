@@ -1,0 +1,58 @@
+Name,ShortName,ModeAndPID,Equation,Min Value,Max Value,Units,Header
+!Inst Kpower,Inst P (KW),,[222885]*[222414]/1000,-200,200,KW,
+!Inst W/kph,W/kph,,[222885]*[222414]/[22000D],-10000,10000,W/kph,
+!Inst W/mph,W/mph,,[222885]*[222414]/([22000D]/1.61),-10000,10000,W/mph,
+*Speed kmh,Speed,22000D,A,0,160,kmh,7E0
+*Speed mph,Speed,22000D,(A/1.61),0,100,mph,7E0
+!Battery - Pack - Capacity Ah Raw 2017-2018,Bat Cap Raw,2241A3,((A*256)+B)/10,100,250,Ah,7E4
+!Battery - Pack - State of Charge Displayed,Batt % DIC,228334,A*100/255,0,100,%,7E4
+!Battery - Pack - State of Charge Raw HD,SoC Raw HD,2243AF,((((A*256)+B)*100)/65535),0,105,%,7E4
+*Battery - Pack - State of Charge Raw LD,SoC Raw,015B,A/2.55,0,100,%,7E0
+!Battery - Pack - Current HD,Batt Amps HD,2240D4,((Signed(A)*256)+B)/20,-400,250,A,7E7
+*Battery - 5V Reference Voltage 1,+5V REF 1,2240D3,5+((SIGNED(A)*256+B)*5/65535),0,6,V,7E7
+*Battery - Thermal Conditioning Inactive Time,Batt TC Inactive,2224AC,((A*256)+B)*2,0,999999,sec,7E4
+!Battery - Coolant Temp,Batt Coolant,2241A4,A-40,-40,100,C,7E4
+!Battery - Coolant Temp F,Batt Coolant,2241A4,((A-40)*9/5)+32,-40,180,F,7E4
+*Battery - Cell - Minimum Voltage,Min Cell V,224329,((A*256)+B)/1666.666,2.5,4.5,V,7E4
+!Battery - Cell - Average Voltage,Avg Cell,22C218,((A*256)+B)*5/65535,2.5,4.2,V,7E7
+*Battery - Cell - Average Voltage 2,Avg Cell 2,2244B9,((A*256)+B)/8000,2.5,4.2,V,7E7
+*Battery - Pack - Minimum Voltage,Min Batt V,22433B,((A*256)+B)*0.52,250,410,V,7E4
+*Battery - Pack - Coolant Level Switch,Batt Cool Lvl,22442C,5*(A/255),0,5,V,7E4
+*Charger - AC Current,CAC Amps,224369,A*.2,0,40,A,7E4
+!Charger - HV Current,CDC Amps,22436C,((Signed(A)*256+B))/20,0,200,A,7E4
+!Charger - DC Port Current,DCC Curent,224424,((A*256)+B-32768)/128,0,150,A,7E4
+*Charger - DC Port KW,DCC KW,,[22436B]*[224424]/1000,0,56,kW,7E4
+-Charger - Port Lock Actuator Position Signal,DCC Lock Sig,22445D,(5*((A*256)+B))/65535,0,5,V,7E4
+*Charger - Port Door Status,Chrg Port Door,224372,B,0,1,Open,7E4
+-Charger - Proximity Detection Circuit Voltage,Prox Det Circ,2243BB,(5*A)/255,0,6,V,7E4
+*Charger - AC Control Pilot Voltage,AC Ctrl Pilot V,224545,A*0.05,0,10,V,7E4
+?Charger - High Output Active,? Output,224373,((A*256)+B)/32768,0,1,Active,7E4
+*Charger - System Efficiency (Alt Calc),Chrg Effic Alt%,,[22436B]*[22436C]*100/[224376],0,100,%,7E4
+*Charger - System Efficiency (Passive Test),Chrg Effic %,224566,(A*2)/2.55,0,100,%,7E4
+?Charger - Charging Limit,? Chg Limit,2241B7,(Signed(A)*256+b),0,32000,W,7E4
+!HV Current HD,HV Amps,222414,(Signed(A)*256+B)/20,-200,500,A,7E1
+!HV Current,HV Amps 2,224356,(Signed(A)*256+B)/(-6.675),-200,500,A,7E4
+!HV Circuit (HPCM),HPCM HV,221C24,((A*256)+B)/100,0,500,V,7E1
+*Air Temp - Unfiltered,Air Temp Unfilt,22801E,(A/2)-40,-40,100,C,7E4
+*Air Temp - Unfiltered F,Air Temp Unfilt,22801E,(((A/2)-40)*9/5)+32,-40,150,F,7E4
+*Cabin - Heater - Command W,Cabin Heat Req,2241B3,(Signed(A)*256+B),0,7500,W,7E4
+*Cabin - Climate Control Target Temp Broken,Climate Broken,224520,(A/2)-40,0,10,Broken,7E4
+*Electronics Coolant Pump Speed,Elec Pump Speed,224358,(A*25),0,6500,RPM,7E4
+*Axle Torque - Driver Requested,Axle Torque Req,222434,((A*256)+B)-22534,0,10000,N.m,7E1
+*Throttle Position - Calculated,Accel Pos,222810,(A/2.55),0,100,%,7E1
+*Regen Braking Status,Regen Status,2224B0,A>7,0,1,On,7E1
+!Brake Motor Driver Temp 1,BMD Temp 1,224509,SIGNED(A),-40,120,C,7E6
+!Brake Motor Driver Temp 1 F,BMD Temp 1,224509,(SIGNED(A)*9/5)+32,-40,150,F,7E6
+*Brake Pedal Position 1,BrakePedalPos1,224501,((SIGNED(A)*256)+B)/100,-15,15,mm,7E6
+!Brake Torque,Brake Tq,22242C,((A*256)+B)/2,0,65535,N-m,7E1
+!Transmission - RPM,RPM,221942,((A*256)+B)/8,0,8810,RPM,7E1
+*14V APM Enable Command,14V APM En,221C39,A/128,0,1,On,7E0
+*14V Power Available,14V Power,2241B0,((A*256)+B)/16,0,1600,W,7E4
+*Control Module Voltage,Ctrl Mod V,220042,((A*256)+B)/1000,0,16,V,7E0
++Cell Voltage #01,Cell 01,224181,((A*256)+B)*5/65535,2.5,4.2,V,7E7
+-Motor Phase U Current,Motor U Current,2228DE,((SIGNED(A)*256)+B)*0.04,-150,200,A,7E1
+-Shifter Position Indicator,Shifter Pos,221B1A,A-146,0,8,Pos,7E3
+-Clock,Clock,224416,B+(C/100),0,24,Clock,7E4
+?MG Current ?,?MG A1,2224DF,((Signed(A)*256)+B)/20,-400,400,A,7E1
+?Unknown HPCM2-Data-Status,HPCM2UnkStat,22441E,((A<24)+(B<16)+(C*256)+D),0,0,?,7E4
+?Unknown 28F1,Unk 28F1,2228F1,(Signed(A)*256+B),-32768,32767,?,7E1

@@ -1,0 +1,150 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+      - name: Formatting
+        working-directory: equation_rs
+        run: cargo fmt --check
+      - name: Build
+        working-directory: equation_rs
+        run: cargo build --release
+      - name: Run tests
+        working-directory: equation_rs
+        run: cargo test --release
+      - name: Docs build without warnings
+        working-directory: equation_rs
+        run: RUSTDOCFLAGS="-D warnings" cargo doc --no-deps
+      - name: Generate header
+        working-directory: equation_rs
+        run: |
+          cargo install cbindgen
+          cbindgen --config cbindgen.toml --crate obd_equation_rs --output obd_equation_rs.h
+      - name: Package artifacts
+        run: |
+          mkdir -p dist
+          cp equation_rs/target/release/libobd_equation_rs.a dist/ 2>/dev/null || true
+          cp equation_rs/obd_equation_rs.h dist/
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: linux-x86_64
+          path: dist/
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-msvc
+      - name: Build
+        working-directory: equation_rs
+        run: cargo build --release --target x86_64-pc-windows-msvc
+      - name: Run tests
+        working-directory: equation_rs
+        run: cargo test --release --target x86_64-pc-windows-msvc
+      - name: Generate header
+        working-directory: equation_rs
+        run: |
+          cargo install cbindgen
+          cbindgen --config cbindgen.toml --crate obd_equation_rs --output obd_equation_rs.h
+      - name: Package artifacts
+        shell: bash
+        run: |
+          mkdir -p dist
+          cp equation_rs/target/x86_64-pc-windows-msvc/release/obd_equation_rs.dll dist/ 2>/dev/null || true
+          cp equation_rs/target/x86_64-pc-windows-msvc/release/obd_equation_rs.lib dist/ 2>/dev/null || true
+          cp equation_rs/obd_equation_rs.h dist/
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-x86_64
+          path: dist/
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-darwin
+      - name: Build aarch64
+        working-directory: equation_rs
+        run: cargo build --release --target aarch64-apple-darwin
+      - name: Run tests
+        working-directory: equation_rs
+        run: cargo test --release
+      - name: Generate header
+        working-directory: equation_rs
+        run: |
+          cargo install cbindgen
+          cbindgen --config cbindgen.toml --crate obd_equation_rs --output obd_equation_rs.h
+      - name: Package artifacts
+        run: |
+          mkdir -p dist
+          cp equation_rs/target/aarch64-apple-darwin/release/libobd_equation_rs.a dist/
+          cp equation_rs/obd_equation_rs.h dist/
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: macos-aarch64
+          path: dist/
+
+  # iPad build (iPad_Build_Plan I0): one artifact per SDK (same arch, no fat
+  # lib), mirroring the local lib/ios-device + lib/ios-sim staging.
+  # Build-only: iOS binaries can't execute on the runner; the other jobs run
+  # the test suite (incl. the corpus-snapshot oracle, whose fixtures are
+  # committed). Cross-compiles cleanly since NA5 — pure Rust, no bindgen.
+  build-ios:
+    runs-on: macos-latest
+    env:
+      IPHONEOS_DEPLOYMENT_TARGET: "18.2"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-apple-ios,aarch64-apple-ios-sim
+      - name: Build device slice
+        working-directory: equation_rs
+        run: cargo build --release --target aarch64-apple-ios
+      - name: Build simulator slice
+        working-directory: equation_rs
+        run: cargo build --release --target aarch64-apple-ios-sim
+      - name: Generate header
+        working-directory: equation_rs
+        run: |
+          cargo install cbindgen
+          cbindgen --config cbindgen.toml --crate obd_equation_rs --output obd_equation_rs.h
+      - name: Package artifacts
+        run: |
+          mkdir -p dist/ios-device dist/ios-sim
+          cp equation_rs/target/aarch64-apple-ios/release/libobd_equation_rs.a dist/ios-device/
+          cp equation_rs/target/aarch64-apple-ios-sim/release/libobd_equation_rs.a dist/ios-sim/
+          cp equation_rs/obd_equation_rs.h dist/ios-device/
+          cp equation_rs/obd_equation_rs.h dist/ios-sim/
+      - name: Upload device artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-device
+          path: dist/ios-device/
+      - name: Upload simulator artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-sim
+          path: dist/ios-sim/

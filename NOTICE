@@ -1,0 +1,11 @@
+obd_equation_rs — Copyright (c) 2025-2026 Grey Horse Software.
+Licensed under MIT OR Apache-2.0, at your option (see LICENSE-MIT and LICENSE-APACHE).
+
+The test corpus under equation_rs/tests/ cross-checks generated equations against
+the standard OBD-II PID formulas as tabulated in the Wikipedia article
+"OBD-II PIDs" (https://en.wikipedia.org/wiki/OBD-II_PIDs), licensed CC BY-SA 4.0.
+The formulas themselves are the SAE J1979 definitions; PID names in the corpus
+follow that article's wording.
+
+"Torque" refers to the Torque Android app's equation dialect, which this crate
+implements independently for compatibility. Torque is a trademark of its owner.
